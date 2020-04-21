@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ch-ZN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>扫雷移动版</title>
+    <script src="vue.js"></script>
+    <link rel="stylesheet" href="main.css"></link>
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="header" id="header">
+            <div class="time" id="time">
+                使用时间：{{game.time}}秒
+            </div>
+            <div class="aim" id="aim">
+                余剩雷数：{{game.boom}}
+            </div>
+        </div>
+        <div class="game" id="game">
+            <div class="game-inner" id="game-inner" v-bind:style="{width:100*game.scale + '%'}">
+                <div class="game-blank" v-for="n in game.blankNum" v-bind:style="{width:100*game.scale/game.transverse + 'vw',height:100*game.scale/game.transverse + 'vw',maxWidth:100/game.transverse + '%',minWidth:100/game.transverse + '%'}">
+                    <div class="game-blank-inner" v-on:click="click(n)">
+                        <span v-if="!game.start">{{n}}</span>
+                        <span v-if="game.start&&game.blankStatu[n]">
+                            雷
+                        </span>
+                        <span>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="controls" id="controls">
+            <div class="safe" id="safe" v-on:click="controls.activeControl = 'safe'" v-bind:class="{active: controls.activeControl=='safe'}">翻开</div>
+            <div class="boom" id="boom" v-on:click="controls.activeControl = 'boom'" v-bind:class="{active: controls.activeControl=='boom'}">标雷</div>
+            <div class="unknown" id="unknown" v-on:click="controls.activeControl = 'unknown'" v-bind:class="{active: controls.activeControl=='unknown'}">未知</div>
+            <div class="tip" id="tip" v-on:click="controls.activeControl = 'tip'" v-bind:class="{active: controls.activeControl=='tip'}">提示</div>
+            <div class="scaleDown" id="scaleDown" v-on:click="game.scale -= 0.1">缩小</div>
+            <div class="scaleUp" id="scaleUp" v-on:click="game.scale += 0.1">放大</div>
+        </div>
+        <div class="result" id="result" v-if="game.start&&(game.safe==0||game.fail)">
+            游戏结束
+        </div>
+        <div class="setting" id="setting" v-if="!game.start">
+            <div>总雷数：<input v-model.number="game.boom" type="number"></div>
+            <div>总格数：<input v-model.number="game.blankNum" type="number"></div>
+            <div v-on:click="game.start = true,game.safe = game.blankNum-game.boom,randomBoom()">开始游戏</div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
